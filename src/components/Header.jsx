@@ -1,7 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Container, Navbar, Nav, Button } from "react-bootstrap";
-import { FaGithub, FaTwitter } from "react-icons/fa";
 
 const Header = () => {
   const navigate = useNavigate();
@@ -40,10 +39,10 @@ const Header = () => {
                 href="/auth"
                 className="d-flex align-items-center"
               >
-                Sign in
+                Sign in / Register
               </Button>
             </Nav.Item>
-            <Nav.Item>
+            {/* <Nav.Item>
               <Button
                 variant="outline-light"
                 href="https://twitter.com"
@@ -52,7 +51,7 @@ const Header = () => {
               >
                 Register
               </Button>
-            </Nav.Item>
+            </Nav.Item> */}
           </Nav>
         </Navbar>
       </Container>
