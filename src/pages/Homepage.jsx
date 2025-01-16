@@ -27,7 +27,7 @@ const Homepage = () => {
                 Optimise Your CV for the Perfect Role
               </h1>
               <p className="lead">
-                Jobro.io uses advanced AI to tailor your CV for specific job
+                CvTailor.io uses advanced AI to tailor your CV for specific job
                 requirements, helping you secure your dream role effortlessly.
               </p>
               <Button variant="light" size="lg" className="mt-3">
@@ -37,7 +37,7 @@ const Homepage = () => {
             <Col md={6} className="text-center">
               <img
                 src="src/assets/sebastian-herrmann-NbtIDoFKGO8-unsplash.jpg"
-                alt="Jobro.io hero illustration"
+                alt="CvTailor.io hero illustration"
                 className="img-fluid rounded shadow"
               />
             </Col>
@@ -45,10 +45,10 @@ const Homepage = () => {
         </Container>
       </section>
 
-      {/* Steps to Use Jobro.io */}
+      {/* Steps to Use CvTailor.io */}
       <section style={{ padding: "60px 0" }}>
         <Container>
-          <h2 className="text-center mb-4">How to Start Using Jobro.io</h2>
+          <h2 className="text-center mb-4">How to Start Using CvTailor.io</h2>
           <Row className="justify-content-center">
             <Col md={8}>
               <ul className="list-unstyled text-center">
@@ -83,7 +83,7 @@ const Homepage = () => {
         }}
       >
         <Container className="text-center">
-          <h2>Get the Jobro.io Browser Extension</h2>
+          <h2>Get the CvTailor.io Browser Extension</h2>
           <p className="lead">
             Enhance your job application process with our powerful browser
             extension.
@@ -98,7 +98,7 @@ const Homepage = () => {
       {/* Features Section */}
       <section style={{ padding: "60px 0" }}>
         <Container>
-          <h2 className="text-center mb-4">Features of Jobro.io</h2>
+          <h2 className="text-center mb-4">Features of CvTailor.io</h2>
           <Row className="text-center">
             {[
               {
@@ -134,17 +134,17 @@ const Homepage = () => {
           <Row className="text-center">
             {[
               {
-                text: `"Thanks to Jobro.io, my CV was perfectly tailored to the role I wanted. Within just a few weeks, I secured my dream job and couldn’t be happier. Highly recommended!"`,
+                text: `"Thanks to CvTailor.io, my CV was perfectly tailored to the role I wanted. Within just a few weeks, I secured my dream job and couldn’t be happier. Highly recommended!"`,
                 name: "Jack Evans",
                 title: "Software Engineer",
               },
               {
-                text: `"Jobro.io made optimising my CV for specific roles so easy. The tailored suggestions helped me stand out, and I landed an amazing position faster than I expected."`,
+                text: `"CvTailor.io made optimising my CV for specific roles so easy. The tailored suggestions helped me stand out, and I landed an amazing position faster than I expected."`,
                 name: "Mark Richards",
                 title: "Marketing Manager",
               },
               {
-                text: `"The AI-driven insights were a complete game changer for me. My CV went from ordinary to outstanding, and I got hired within weeks of using Jobro.io."`,
+                text: `"The AI-driven insights were a complete game changer for me. My CV went from ordinary to outstanding, and I got hired within weeks of using CvTailor.io."`,
                 name: "Alex Brown",
                 title: "Graphic Designer",
               },
@@ -178,7 +178,7 @@ const Homepage = () => {
         <Container className="text-center">
           <h2>Ready to Land Your Dream Role?</h2>
           <p className="lead">
-            Sign up now and get started with Jobro.io today!
+            Sign up now and get started with CvTailor.io today!
           </p>
           <Button variant="light" size="lg">
             Join for Free

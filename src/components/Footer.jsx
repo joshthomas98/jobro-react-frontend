@@ -12,11 +12,11 @@ const Footer = () => {
         <Row className="mb-5" style={{ justifyContent: "space-between" }}>
           {/* About Section */}
           <Col xs={12} md={3} className="d-flex flex-column align-items-center">
-            <h5>About Jobro.io</h5>
+            <h5>About CvTailor.io</h5>
             <p className="text-center">
-              Jobro.io helps you optimise your CV for the perfect job role using
-              AI. Join thousands of users taking their job applications to the
-              next level.
+              CvTailor.io helps you optimise your CV for the perfect job role
+              using AI. Join thousands of users taking their job applications to
+              the next level.
             </p>
           </Col>
 
@@ -153,11 +153,12 @@ const Footer = () => {
         <Row className="justify-content-between text-center">
           <Col xs={12} md="auto">
             <p className="small">
-              &copy; {new Date().getFullYear()} Jobro.io. All rights reserved.
+              &copy; {new Date().getFullYear()} CvTailor.io. All rights
+              reserved.
             </p>
           </Col>
           <Col xs={12} md="auto">
-            <p className="small">Built with ❤️ by the Jobro.io team.</p>
+            <p className="small">Built with ❤️ by the CvTailor.io team.</p>
           </Col>
         </Row>
       </Container>

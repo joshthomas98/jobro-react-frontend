@@ -12,7 +12,9 @@ import {
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const themeColor = "#2D88FF"; // Primary Jobro color
+const themeColor = "#2D88FF"; // Primary CvTailor color
+const defaultProfilePic =
+  "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"; // Default blank person icon URL
 
 const UserProfile = () => {
   const [userData, setUserData] = useState({});
@@ -41,7 +43,7 @@ const UserProfile = () => {
         setUserData(response.data);
         setFullName(response.data.fullName);
         setEmail(response.data.email);
-        setProfilePic(response.data.profilePic);
+        setProfilePic(response.data.profilePic || defaultProfilePic); // Use default if no profile pic
         setGeneratedCVs(response.data.generatedCVs || []);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -78,7 +80,7 @@ const UserProfile = () => {
       setUserData(response.data);
       setFullName(response.data.fullName);
       setEmail(response.data.email);
-      setProfilePic(response.data.profilePic);
+      setProfilePic(response.data.profilePic || defaultProfilePic);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user data:", error);
@@ -92,30 +94,17 @@ const UserProfile = () => {
         <Col md={4}>
           <Card className="shadow-lg rounded-lg border-0">
             <Card.Body className="text-center">
-              {profilePic ? (
-                <Image
-                  src={profilePic}
-                  roundedCircle
-                  fluid
-                  style={{
-                    maxWidth: "150px",
-                    maxHeight: "150px",
-                    objectFit: "cover",
-                  }}
-                />
-              ) : (
-                <Image
-                  src="https://via.placeholder.com/150"
-                  roundedCircle
-                  fluid
-                  alt="Profile Placeholder"
-                  style={{
-                    maxWidth: "150px",
-                    maxHeight: "150px",
-                    objectFit: "cover",
-                  }}
-                />
-              )}
+              <Image
+                src={profilePic}
+                roundedCircle
+                fluid
+                style={{
+                  maxWidth: "150px",
+                  maxHeight: "150px",
+                  objectFit: "cover",
+                }}
+                alt="Profile Picture"
+              />
               <h3 className="mt-3 text-primary" style={{ fontWeight: 600 }}>
                 {fullName}
               </h3>
@@ -249,7 +238,7 @@ const UserProfile = () => {
       {isEditing && (
         <Row>
           <Col md={12}>
-            <Card className="shadow-lg rounded-lg border-0">
+            <Card className="shadow-lg rounded-lg border-0 mb-5">
               <Card.Body>
                 <h4 className="text-primary" style={{ fontWeight: 600 }}>
                   Edit Profile

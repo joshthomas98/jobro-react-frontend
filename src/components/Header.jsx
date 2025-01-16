@@ -9,7 +9,7 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  const storedUserId = localStorage.getItem("userId");
+  // const storedUserId = localStorage.getItem("userId");
 
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
 
@@ -18,9 +18,9 @@ const Header = () => {
   useEffect(() => {
     const getUsersFirstNameFromId = async () => {
       try {
-        // Fetch user data using the stored user ID
+        // Fetch user data using the user ID
         const response = await axios.get(
-          `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${storedUserId}`
+          `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`
         );
         console.log(response.data.fullName);
         setFullName(response.data.fullName);
@@ -30,10 +30,10 @@ const Header = () => {
     };
 
     // Call the function
-    if (storedUserId) {
+    if (userId) {
       getUsersFirstNameFromId();
     }
-  }, [storedUserId]);
+  }, [userId]);
 
   const handleLogout = () => {
     localStorage.removeItem("userId"); // Clear user ID from localStorage
@@ -60,8 +60,8 @@ const Header = () => {
           <Navbar.Brand>
             <img
               className="img-fluid py-3"
-              src="src/assets/jobro-logo.png"
-              alt="Jobro.io Logo"
+              src="src/assets/cvtailor-logo.png"
+              alt="CvTailor.io Logo"
               onClick={() => navigate("/")}
               style={{
                 maxHeight: "200px", // Control the logo's height
@@ -72,7 +72,7 @@ const Header = () => {
           </Navbar.Brand>
 
           <Nav className="d-flex align-items-center">
-            {!storedUserId ? (
+            {!userId ? (
               <Nav.Item className="me-3">
                 <Button
                   variant="outline-light"
@@ -86,13 +86,21 @@ const Header = () => {
               <p className="m-0 me-3">Welcome, {firstName}</p> // Neat margin and no extra space
             )}
 
-            <Button variant="outline-light" href="/userprofile">
-              My Profile
-            </Button>
+            {userId ? (
+              <Nav.Item className="me-3">
+                <Button
+                  variant="outline-light"
+                  href="/userprofile"
+                  className="me-3"
+                >
+                  My Profile
+                </Button>
 
-            <Button variant="outline-light" onClick={handleLogout}>
-              Logout
-            </Button>
+                <Button variant="outline-light" onClick={handleLogout}>
+                  Logout
+                </Button>
+              </Nav.Item>
+            ) : null}
           </Nav>
         </Navbar>
       </Container>

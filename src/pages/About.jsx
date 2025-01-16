@@ -7,9 +7,9 @@ const About = () => {
     <Container fluid="md" style={{ padding: "60px 0" }}>
       <Row className="mb-5 text-center">
         <Col xs={12}>
-          <h1>About Jobro.io</h1>
+          <h1>About CvTailor.io</h1>
           <p className="lead">
-            Jobro.io is revolutionising how you apply for jobs by using AI to
+            CvTailor.io is revolutionising how you apply for jobs by using AI to
             optimise your CV and help you land the job you’ve always wanted.
           </p>
         </Col>
@@ -19,7 +19,7 @@ const About = () => {
         <Col xs={12} md={6}>
           <h3>Our Mission</h3>
           <p>
-            At Jobro.io, our mission is to empower job seekers by providing
+            At CvTailor.io, our mission is to empower job seekers by providing
             innovative, AI-driven tools that improve the job application
             process. We aim to help individuals create tailored, professional
             CVs that make them stand out in the competitive job market.
@@ -30,7 +30,7 @@ const About = () => {
         </Col>
 
         <Col xs={12} md={6}>
-          <h3>Why Choose Jobro.io?</h3>
+          <h3>Why Choose CvTailor.io?</h3>
           <ul>
             <li>
               AI-powered CV optimisation for personalised job applications.
@@ -62,8 +62,8 @@ const About = () => {
               <FaRegUser size={50} className="mb-3" />
               <Card.Title>Josh Thomas</Card.Title>
               <Card.Text>CEO & Founder</Card.Text>
-              <Button variant="link" href="mailto:josh@jobro.io">
-                josh@jobro.io
+              <Button variant="link" href="mailto:josh@cvtailor.io">
+                josh@cvtailor.io
               </Button>
             </Card.Body>
           </Card>
@@ -75,8 +75,8 @@ const About = () => {
               <FaRegUser size={50} className="mb-3" />
               <Card.Title>Jane Smith</Card.Title>
               <Card.Text>Lead Developer</Card.Text>
-              <Button variant="link" href="mailto:jane@jobro.io">
-                jane@jobro.io
+              <Button variant="link" href="mailto:jane@cvtailor.io">
+                jane@cvtailor.io
               </Button>
             </Card.Body>
           </Card>
@@ -88,8 +88,8 @@ const About = () => {
               <FaRegUser size={50} className="mb-3" />
               <Card.Title>Michael Lee</Card.Title>
               <Card.Text>Product Manager</Card.Text>
-              <Button variant="link" href="mailto:michael@jobro.io">
-                michael@jobro.io
+              <Button variant="link" href="mailto:michael@cvtailor.io">
+                michael@cvtailor.io
               </Button>
             </Card.Body>
           </Card>
@@ -99,7 +99,7 @@ const About = () => {
       <Row className="text-center mt-5">
         <Col xs={12}>
           <Button variant="primary" href="/signup" size="lg">
-            Join Jobro.io Today
+            Join CvTailor.io Today
           </Button>
         </Col>
       </Row>
