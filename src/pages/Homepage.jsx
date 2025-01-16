@@ -1,8 +1,15 @@
-import React from "react";
+import React, { useEffect, useContext } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { FaChrome } from "react-icons/fa";
+import { LoginContext } from "../App";
 
 const Homepage = () => {
+  const { userId, setUserId } = useContext(LoginContext);
+
+  useEffect(() => {
+    console.log(userId);
+  }, []);
+
   return (
     <div style={{ backgroundColor: "#f9f9f9", minHeight: "100vh" }}>
       {/* Hero Section */}
@@ -96,15 +103,15 @@ const Homepage = () => {
             {[
               {
                 title: "AI-Powered CV Optimisation",
-                text: "Tailor your CV to specific job requirements using AI-driven suggestions.",
+                text: "Enhance your CV to align perfectly with the requirements of any job listing you provide, ensuring you stand out.",
               },
               {
-                title: "Job Match Alerts",
-                text: "Receive personalised job recommendations based on your optimised CV.",
+                title: "Keyword Matching & Insights",
+                text: "Seamlessly integrate the most relevant keywords from job descriptions into your CV, improving its relevance and visibility.",
               },
               {
-                title: "Easy CV Sharing",
-                text: "Share your optimised CV directly with recruiters or apply with one click.",
+                title: "Customised CV Formats",
+                text: "Generate CV layouts tailored to each job listing, showcasing your skills and strengths in the best possible way.",
               },
             ].map((feature, idx) => (
               <Col md={4} className="mb-4" key={idx}>
@@ -127,25 +134,27 @@ const Homepage = () => {
           <Row className="text-center">
             {[
               {
-                text: "Jobro.io helped me land my dream role in less than a month!",
-                name: "John Doe",
+                text: `"Thanks to Jobro.io, my CV was perfectly tailored to the role I wanted. Within just a few weeks, I secured my dream job and couldn’t be happier. Highly recommended!"`,
+                name: "Jack Evans",
                 title: "Software Engineer",
               },
               {
-                text: "I love the personalised job alerts. Never miss a posting!",
-                name: "Jane Smith",
-                title: "Data Scientist",
+                text: `"Jobro.io made optimising my CV for specific roles so easy. The tailored suggestions helped me stand out, and I landed an amazing position faster than I expected."`,
+                name: "Mark Richards",
+                title: "Marketing Manager",
               },
               {
-                text: "I love the personalised job alerts. Never miss a posting!",
-                name: "Jane Smith",
-                title: "Data Scientist",
+                text: `"The AI-driven insights were a complete game changer for me. My CV went from ordinary to outstanding, and I got hired within weeks of using Jobro.io."`,
+                name: "Alex Brown",
+                title: "Graphic Designer",
               },
             ].map((testimonial, idx) => (
               <Col md={4} className="mb-4" key={idx}>
                 <Card className="h-100 shadow">
                   <Card.Body>
-                    <Card.Text className="mb-4">{testimonial.text}</Card.Text>
+                    <Card.Text className="mb-4" style={{ fontStyle: "italic" }}>
+                      {testimonial.text}
+                    </Card.Text>
                     <Card.Subtitle>{testimonial.name}</Card.Subtitle>
                     <Card.Text className="text-muted">
                       {testimonial.title}

@@ -1,41 +1,38 @@
 import React, { useState } from "react";
 import { Container, Row, Col, Form, Button, Card, Nav } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import LoadingSpinner from "../components/LoadingSpinner";
 import axios from "axios";
+import LoadingSpinner from "../components/LoadingSpinner";
 
-const AuthPage = () => {
+const Register = () => {
   const SERVER_BASE_URL = "http://localhost:8000/";
-
   const navigate = useNavigate();
 
-  const [isRegister, setIsRegister] = useState(false);
-  const toggleForm = () => setIsRegister(!isRegister);
-
   const [isLoading, setIsLoading] = useState(false);
-
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
-  const newUserSignup = async () => {
+  const handleRegister = async () => {
     if (confirmPassword !== password) {
-      alert("You must enter the same password twice");
-      return; // Exit the function early
+      alert("Passwords do not match");
+      return;
     }
-
-    setIsLoading(true); // Show spinner
-
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `${SERVER_BASE_URL}users/new-user-signup`,
-        { fullName, email, password }
+        {
+          fullName,
+          email,
+          password,
+        }
       );
-      console.log("Signup successful:", response.data);
+      console.log("Registration successful:", response.data);
       navigate("/welcomepage");
     } catch (error) {
-      console.error("Signup error:", error.message);
+      console.error("Registration error:", error.message);
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +42,7 @@ const AuthPage = () => {
     <Container
       fluid
       className="d-flex justify-content-center align-items-center"
-      style={{ height: "65vh", backgroundColor: "#F5F5F5" }}
+      style={{ height: "75vh", backgroundColor: "#F5F5F5" }}
     >
       <Row className="justify-content-center w-100">
         <Col md={6} lg={4}>
@@ -55,27 +52,22 @@ const AuthPage = () => {
                 className="text-center mb-4"
                 style={{ color: "#006666", fontWeight: "bold" }}
               >
-                {isRegister ? "Create an Account" : "Sign In"}
+                Create an Account
               </h3>
-
-              {/* Show spinner when loading */}
               {isLoading ? (
                 <LoadingSpinner message="Creating your account..." />
               ) : (
                 <Form>
-                  {isRegister && (
-                    <Form.Group controlId="fullName">
-                      <Form.Label>Full Name</Form.Label>
-                      <Form.Control
-                        type="text"
-                        placeholder="Enter full name"
-                        required
-                        className="mb-3"
-                        onChange={(e) => setFullName(e.target.value)}
-                      />
-                    </Form.Group>
-                  )}
-
+                  <Form.Group controlId="fullName">
+                    <Form.Label>Full Name</Form.Label>
+                    <Form.Control
+                      type="text"
+                      placeholder="Enter full name"
+                      required
+                      className="mb-3"
+                      onChange={(e) => setFullName(e.target.value)}
+                    />
+                  </Form.Group>
                   <Form.Group controlId="email">
                     <Form.Label>Email</Form.Label>
                     <Form.Control
@@ -86,7 +78,6 @@ const AuthPage = () => {
                       onChange={(e) => setEmail(e.target.value)}
                     />
                   </Form.Group>
-
                   <Form.Group controlId="password">
                     <Form.Label>Password</Form.Label>
                     <Form.Control
@@ -97,47 +88,38 @@ const AuthPage = () => {
                       onChange={(e) => setPassword(e.target.value)}
                     />
                   </Form.Group>
-
-                  {isRegister && (
-                    <Form.Group controlId="confirmPassword">
-                      <Form.Label>Confirm Password</Form.Label>
-                      <Form.Control
-                        type="password"
-                        placeholder="Confirm password"
-                        required
-                        className="mb-3"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                    </Form.Group>
-                  )}
-
+                  <Form.Group controlId="confirmPassword">
+                    <Form.Label>Confirm Password</Form.Label>
+                    <Form.Control
+                      type="password"
+                      placeholder="Confirm password"
+                      required
+                      className="mb-3"
+                      onChange={(e) => setConfirmPassword(e.target.value)}
+                    />
+                  </Form.Group>
                   <Button
                     variant="primary"
-                    type="submit"
                     block
                     className="mb-3"
                     style={{
                       backgroundColor: "#006666",
                       borderColor: "#006666",
                     }}
-                    onClick={newUserSignup}
-                    disabled={isLoading} // Disable button when loading
+                    onClick={handleRegister}
+                    disabled={isLoading}
                   >
-                    {isRegister ? "Register" : "Sign In"}
+                    Register
                   </Button>
                 </Form>
               )}
-
               <div className="text-center">
                 <Nav.Link
                   as={Link}
-                  to="#"
-                  onClick={toggleForm}
+                  to="/signin"
                   style={{ color: "#006666", textDecoration: "none" }}
                 >
-                  {isRegister
-                    ? "Already have an account? Sign In"
-                    : "Don’t have an account? Register"}
+                  Already have an account? Sign In
                 </Nav.Link>
               </div>
             </Card.Body>
@@ -148,4 +130,4 @@ const AuthPage = () => {
   );
 };
 
-export default AuthPage;
+export default Register;
