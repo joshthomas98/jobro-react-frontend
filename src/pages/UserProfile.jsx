@@ -53,9 +53,9 @@ const UserProfile = () => {
     fetchUserData();
   }, [userId]);
 
-  const handleGenerateOptimizedCV = () => {
-    // Generate optimized CV logic here
-    alert("Generating Optimized CV...");
+  const handleGenerateOptimisedCV = () => {
+    // Generate optimised CV logic here
+    alert("Generating Optimised CV...");
   };
 
   const handleUploadCV = (e) => {
@@ -149,7 +149,7 @@ const UserProfile = () => {
               </Form.Group>
               <Button
                 variant="primary"
-                onClick={handleGenerateOptimizedCV}
+                onClick={handleGenerateOptimisedCV}
                 className="rounded-pill mt-3"
                 style={{
                   backgroundColor: themeColor,
@@ -157,7 +157,7 @@ const UserProfile = () => {
                   padding: "10px 30px",
                 }}
               >
-                Generate My Optimized CV
+                Generate My Optimised CV
               </Button>
             </Card.Body>
           </Card>
