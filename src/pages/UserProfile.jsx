@@ -11,24 +11,20 @@ import {
 } from "react-bootstrap";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const themeColor = "#2D88FF"; // Primary CvTailor color
 const defaultProfilePic =
   "https://www.gravatar.com/avatar/00000000000000000000000000000000?d=mp&f=y"; // Default blank person icon URL
 
 const UserProfile = () => {
+  const [isLoading, setIsLoading] = useState(false);
   const [userData, setUserData] = useState({});
-  const [fullName, setFullName] = useState("");
-  const [email, setEmail] = useState("");
-  const [profilePic, setProfilePic] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
-  const [newFullName, setNewFullName] = useState("");
-  const [newEmail, setNewEmail] = useState("");
-  const [newPassword, setNewPassword] = useState("");
-  const [newProfilePic, setNewProfilePic] = useState(null);
   const [jobListingText, setJobListingText] = useState("");
   const [generatedCVs, setGeneratedCVs] = useState([]);
   const [uploadedCV, setUploadedCV] = useState(null);
+  const [optimisedCVText, setOptimisedCVText] = useState("");
 
   const userId = localStorage.getItem("userId");
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
@@ -41,10 +37,6 @@ const UserProfile = () => {
           `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`
         );
         setUserData(response.data);
-        setFullName(response.data.fullName);
-        setEmail(response.data.email);
-        setProfilePic(response.data.profilePic || defaultProfilePic); // Use default if no profile pic
-        setGeneratedCVs(response.data.generatedCVs || []);
       } catch (error) {
         console.error("Error fetching user data:", error);
       }
@@ -53,24 +45,72 @@ const UserProfile = () => {
     fetchUserData();
   }, [userId]);
 
-  const handleGenerateOptimisedCV = () => {
-    // Generate optimised CV logic here
-    alert("Generating Optimised CV...");
+  const handleGenerateOptimisedCV = async () => {
+    setIsLoading(true);
+    try {
+      const response = await axios.post(
+        `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`,
+        { jobListingText }
+      );
+      console.log("Optimised CV back from AI:", response.data);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
-  const handleUploadCV = (e) => {
+  const handleUploadCV = async (e) => {
     const file = e.target.files[0];
     setUploadedCV(file);
-    // Add logic for storing the uploaded CV on the server
+
+    console.log(file.name);
+
+    if (!file) {
+      alert("No file selected!");
+      return;
+    }
+
+    if (file.type !== "application/pdf") {
+      alert("Please upload a valid PDF file.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("cvFile", file);
+    formData.append("userId", userId);
+
+    try {
+      const response = await axios.post(
+        `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/uploadCV`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        alert("CV uploaded successfully!");
+        // Update user data after successful upload
+        setUserData(response.data); // Assuming response.data includes the updated user info
+      } else {
+        alert("Error uploading CV.");
+      }
+    } catch (error) {
+      console.error("Error uploading CV:", error);
+      alert("Error uploading CV.");
+    }
   };
 
   const handleSaveProfile = async () => {
     try {
       const updatedUserData = {
-        fullName: newFullName || fullName,
-        email: newEmail || email,
-        password: newPassword,
-        profilePic: newProfilePic || profilePic,
+        fullName: userData.fullName,
+        email: userData.email,
+        password: userData.password,
+        profilePic: userData.profilePic,
         uploadedCV: uploadedCV,
       };
       const response = await axios.put(
@@ -78,24 +118,24 @@ const UserProfile = () => {
         updatedUserData
       );
       setUserData(response.data);
-      setFullName(response.data.fullName);
-      setEmail(response.data.email);
-      setProfilePic(response.data.profilePic || defaultProfilePic);
       setIsEditing(false);
     } catch (error) {
       console.error("Error updating user data:", error);
     }
   };
 
+  //   console.log(userData.baseCV.fileUrl);
+
   return (
     <Container>
+      {isLoading && <LoadingSpinner />}
       {/* Profile Header */}
       <Row className="my-5">
         <Col md={4}>
           <Card className="shadow-lg rounded-lg border-0">
             <Card.Body className="text-center">
               <Image
-                src={profilePic}
+                src={userData.profilePic || defaultProfilePic}
                 roundedCircle
                 fluid
                 style={{
@@ -106,9 +146,9 @@ const UserProfile = () => {
                 alt="Profile Picture"
               />
               <h3 className="mt-3 text-primary" style={{ fontWeight: 600 }}>
-                {fullName}
+                {userData.fullName}
               </h3>
-              <p className="text-muted">{email}</p>
+              <p className="text-muted">{userData.email}</p>
               {!isEditing && (
                 <Button
                   variant="primary"
@@ -138,7 +178,7 @@ const UserProfile = () => {
                 <Form.Control
                   as="textarea"
                   rows={6}
-                  placeholder="Paste the job listing text here..."
+                  placeholder="Paste the full job listing text here. Don't worry about formatting, we'll take care of that!"
                   value={jobListingText}
                   onChange={(e) => setJobListingText(e.target.value)}
                   style={{
@@ -168,15 +208,51 @@ const UserProfile = () => {
               <h4 className="text-primary" style={{ fontWeight: 600 }}>
                 Upload Your Existing Base CV (PDF)
               </h4>
-              <Form.Group controlId="formBaseCV">
-                <Form.Control
-                  type="file"
-                  accept="application/pdf"
-                  onChange={handleUploadCV}
-                  style={{
-                    borderColor: themeColor,
-                  }}
-                />
+              <Form.Group
+                controlId="formBaseCV"
+                style={{ display: "flex", alignItems: "center" }}
+              >
+                {/* Conditionally render the file input or "Choose new file" button */}
+                {!userData.baseCV || !userData.baseCV.fileUrl ? (
+                  <Form.Control
+                    type="file"
+                    accept="application/pdf"
+                    onChange={handleUploadCV}
+                    style={{
+                      borderColor: themeColor,
+                      display: "inline-block",
+                    }}
+                  />
+                ) : (
+                  <>
+                    {/* "Choose new file" button */}
+                    <Button
+                      variant="link"
+                      onClick={() =>
+                        document.getElementById("cvUpload").click()
+                      }
+                      style={{ padding: 0, margin: 0 }}
+                    >
+                      <small>Choose new file</small>
+                    </Button>
+                    {/* Hidden file input for file selection */}
+                    <Form.Control
+                      id="cvUpload"
+                      type="file"
+                      accept="application/pdf"
+                      onChange={handleUploadCV}
+                      style={{ display: "none" }}
+                    />
+                  </>
+                )}
+                {/* Display the uploaded file name inline */}
+                {userData.baseCV && userData.baseCV.fileUrl && (
+                  <small className="ml-2">
+                    <strong className="mx-2">
+                      {userData.baseCV.fileUrl.split("/").pop()}
+                    </strong>
+                  </small>
+                )}
               </Form.Group>
             </Card.Body>
           </Card>
@@ -218,6 +294,8 @@ const UserProfile = () => {
             </Card.Body>
           </Card>
 
+          <p className="text-dark">{optimisedCVText}</p>
+
           {/* Download New CV */}
           <Button
             variant="primary"
@@ -248,37 +326,34 @@ const UserProfile = () => {
                     <Form.Label>Full Name</Form.Label>
                     <Form.Control
                       type="text"
-                      value={newFullName || fullName}
-                      onChange={(e) => setNewFullName(e.target.value)}
-                      style={{ borderColor: themeColor }}
+                      placeholder="Enter your full name"
+                      value={userData.fullName || ""}
+                      onChange={(e) =>
+                        setUserData({ ...userData, fullName: e.target.value })
+                      }
                     />
                   </Form.Group>
-
-                  <Form.Group controlId="formEmail" className="my-3">
-                    <Form.Label>Email</Form.Label>
+                  <Form.Group controlId="formEmail">
+                    <Form.Label>Email Address</Form.Label>
                     <Form.Control
                       type="email"
-                      value={newEmail || email}
-                      onChange={(e) => setNewEmail(e.target.value)}
-                      style={{ borderColor: themeColor }}
+                      placeholder="Enter your email"
+                      value={userData.email || ""}
+                      onChange={(e) =>
+                        setUserData({ ...userData, email: e.target.value })
+                      }
                     />
                   </Form.Group>
 
                   <Form.Group controlId="formPassword">
-                    <Form.Label>Password (optional)</Form.Label>
+                    <Form.Label>Password</Form.Label>
                     <Form.Control
                       type="password"
-                      placeholder="New password"
-                      onChange={(e) => setNewPassword(e.target.value)}
-                      style={{ borderColor: themeColor }}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formProfilePic" className="my-3">
-                    <Form.Label>Profile Picture</Form.Label>
-                    <Form.Control
-                      type="file"
-                      onChange={(e) => setNewProfilePic(e.target.files[0])}
+                      placeholder="Enter your password"
+                      value={userData.password || ""}
+                      onChange={(e) =>
+                        setUserData({ ...userData, password: e.target.value })
+                      }
                     />
                   </Form.Group>
 
@@ -292,7 +367,7 @@ const UserProfile = () => {
                       padding: "10px 30px",
                     }}
                   >
-                    Save Profile
+                    Save Changes
                   </Button>
                 </Form>
               </Card.Body>

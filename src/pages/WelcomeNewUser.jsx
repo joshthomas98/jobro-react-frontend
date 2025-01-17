@@ -29,7 +29,7 @@ const WelcomeNewUser = () => {
                   variant="primary"
                   style={{ backgroundColor: "#006666", borderColor: "#006666" }}
                   as={Link}
-                  to="/auth"
+                  to="/signin"
                 >
                   Go to Sign In
                 </Button>
