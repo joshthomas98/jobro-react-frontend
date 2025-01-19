@@ -8,6 +8,15 @@ import WelcomeNewUser from "./pages/WelcomeNewUser";
 import Register from "./pages/Register";
 import SignIn from "./pages/SignIn";
 import UserProfile from "./pages/UserProfile";
+import BrowserExtensionComingSoon from "./pages/BrowserExtensionComingSoon.jsx";
+import TermsAndConditions from "./pages/TermsAndConditions";
+import PrivacyPolicy from "./pages/PrivacyPolicy.jsx";
+import Disclaimer from "./pages/Disclaimer.jsx";
+import Support from "./pages/Support.jsx";
+import Blog from "./pages/Blog.jsx";
+import FAQs from "./pages/FAQs.jsx";
+import Careers from "./pages/Careers.jsx";
+import ContactUs from "./pages/ContactUs.jsx";
 
 export const LoginContext = createContext();
 
@@ -42,6 +51,27 @@ const App = () => {
           <Route path="/welcomenewuser" element={<WelcomeNewUser />} />
 
           <Route path="/userprofile/:userId" element={<UserProfile />} />
+
+          <Route
+            path="/browserextensioncomingsoon"
+            element={<BrowserExtensionComingSoon />}
+          />
+
+          <Route path="/terms" element={<TermsAndConditions />} />
+
+          <Route path="/privacy" element={<PrivacyPolicy />} />
+
+          <Route path="/disclaimer" element={<Disclaimer />} />
+
+          <Route path="/support" element={<Support />} />
+
+          <Route path="/blog" element={<Blog />} />
+
+          <Route path="/faqs" element={<FAQs />} />
+
+          <Route path="/careers" element={<Careers />} />
+
+          <Route path="/contact" element={<ContactUs />} />
         </Routes>
         <Footer />
       </Router>

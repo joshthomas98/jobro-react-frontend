@@ -30,7 +30,7 @@ const Homepage = () => {
                 CvTailor.io uses advanced AI to tailor your CV for specific job
                 requirements, helping you secure your dream role effortlessly.
               </p>
-              <Button variant="light" size="lg" className="mt-3">
+              <Button variant="light" size="lg" className="mt-2 mb-4">
                 Get Started for Free
               </Button>
             </Col>
@@ -88,7 +88,12 @@ const Homepage = () => {
             Enhance your job application process with our powerful browser
             extension.
           </p>
-          <Button variant="light" size="lg" className="mt-3">
+          <Button
+            variant="light"
+            size="lg"
+            className="mt-3"
+            href="/browserextensioncomingsoon"
+          >
             <FaChrome className="me-2" />
             Install Extension
           </Button>

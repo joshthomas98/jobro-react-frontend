@@ -10,8 +10,6 @@ const Header = () => {
 
   const navigate = useNavigate();
 
-  // const storedUserId = localStorage.getItem("userId");
-
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
 
   const [fullName, setFullName] = useState("");
@@ -73,37 +71,50 @@ const Header = () => {
             />
           </Navbar.Brand>
 
-          <Nav className="d-flex align-items-center">
-            {!userId ? (
-              <Nav.Item className="me-3">
-                <Button
-                  variant="outline-light"
-                  href="/signin"
-                  className="d-flex align-items-center"
-                >
-                  Sign in / Register
-                </Button>
-              </Nav.Item>
-            ) : (
-              <p className="m-0 me-3">Welcome, {firstName}</p> // Neat margin and no extra space
-            )}
+          {/* Toggler for mobile menu */}
+          <Navbar.Toggle aria-controls="navbar-nav" />
 
-            {userId ? (
-              <Nav.Item className="me-3">
-                <Button
-                  variant="outline-light"
-                  className="me-3"
-                  onClick={navigateToUsersProfile}
-                >
-                  My Profile
-                </Button>
+          <Navbar.Collapse id="navbar-nav">
+            <Nav className="ms-auto d-flex align-items-center">
+              {!userId ? (
+                <Nav.Item className="me-3">
+                  <Button
+                    variant="outline-light"
+                    href="/signin"
+                    className="d-flex align-items-center"
+                  >
+                    Sign in / Register
+                  </Button>
+                </Nav.Item>
+              ) : (
+                <p className="m-0 me-3">Welcome, {firstName}</p>
+              )}
 
-                <Button variant="outline-light" onClick={handleLogout}>
-                  Logout
-                </Button>
-              </Nav.Item>
-            ) : null}
-          </Nav>
+              {userId && (
+                <>
+                  <Nav.Item className="me-3">
+                    <Button
+                      className="mt-3 mt-lg-0"
+                      variant="outline-light"
+                      onClick={navigateToUsersProfile}
+                    >
+                      My Profile
+                    </Button>
+                  </Nav.Item>
+
+                  <Nav.Item>
+                    <Button
+                      className="mt-3 mt-lg-0 me-3 me-lg-0 mb-4 mb-lg-0"
+                      variant="outline-light"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </Button>
+                  </Nav.Item>
+                </>
+              )}
+            </Nav>
+          </Navbar.Collapse>
         </Navbar>
       </Container>
     </header>

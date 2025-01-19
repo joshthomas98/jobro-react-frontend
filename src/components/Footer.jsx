@@ -27,7 +27,7 @@ const Footer = () => {
               <li>
                 <Button
                   variant="link"
-                  href="/termsandconditions"
+                  href="/terms"
                   style={{ color: "#66ccff" }} // Lighter blue color
                 >
                   Terms & Conditions
@@ -36,7 +36,7 @@ const Footer = () => {
               <li>
                 <Button
                   variant="link"
-                  href="/privacypolicy"
+                  href="/privacy"
                   style={{ color: "#66ccff" }} // Lighter blue color
                 >
                   Privacy Policy
@@ -79,7 +79,7 @@ const Footer = () => {
               <li>
                 <Button
                   variant="link"
-                  href="/faq"
+                  href="/faqs"
                   style={{ color: "#66ccff" }} // Lighter blue color
                 >
                   FAQs
