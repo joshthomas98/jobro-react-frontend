@@ -2,6 +2,7 @@ import React, { useEffect, useContext } from "react";
 import { Container, Row, Col, Button, Card } from "react-bootstrap";
 import { FaChrome } from "react-icons/fa";
 import { LoginContext } from "../App";
+import heroImage from "../assets/sebastian-herrmann-NbtIDoFKGO8-unsplash.jpg";
 
 const Homepage = () => {
   const { userId, setUserId } = useContext(LoginContext);
@@ -36,7 +37,7 @@ const Homepage = () => {
             </Col>
             <Col md={6} className="text-center">
               <img
-                src="src/assets/sebastian-herrmann-NbtIDoFKGO8-unsplash.jpg"
+                src={heroImage}
                 alt="CvTailor.io hero illustration"
                 className="img-fluid rounded shadow"
               />
