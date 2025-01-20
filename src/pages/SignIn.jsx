@@ -9,6 +9,7 @@ const SignIn = () => {
   const { userId, setUserId } = useContext(LoginContext);
 
   const SERVER_BASE_URL = "http://localhost:8000/";
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -18,7 +19,7 @@ const SignIn = () => {
   const handleSignIn = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${SERVER_BASE_URL}users/sign-in`, {
+      const response = await axios.post(`${apiUrl}users/sign-in`, {
         email,
         password,
       });

@@ -6,6 +6,7 @@ import axios from "axios";
 
 const AuthPage = () => {
   const SERVER_BASE_URL = "http://localhost:8000/";
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const navigate = useNavigate();
 
@@ -28,10 +29,11 @@ const AuthPage = () => {
     setIsLoading(true); // Show spinner
 
     try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL}users/new-user-signup`,
-        { fullName, email, password }
-      );
+      const response = await axios.post(`${apiUrl}users/new-user-signup`, {
+        fullName,
+        email,
+        password,
+      });
       console.log("Signup successful:", response.data);
       navigate("/welcomepage");
     } catch (error) {

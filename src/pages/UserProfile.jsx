@@ -28,14 +28,13 @@ const UserProfile = () => {
 
   const userId = localStorage.getItem("userId");
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
+  const apiUrl = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(
-          `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`
-        );
+        const response = await axios.get(`${apiUrl}users/${userId}`);
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -123,8 +122,6 @@ const UserProfile = () => {
       console.error("Error updating user data:", error);
     }
   };
-
-  //   console.log(userData.baseCV.fileUrl);
 
   return (
     <Container>
