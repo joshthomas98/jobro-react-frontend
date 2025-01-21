@@ -11,6 +11,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
+  const apiUrl = import.meta.env.VITE_API_URL;
 
   const [fullName, setFullName] = useState("");
 
@@ -18,9 +19,7 @@ const Header = () => {
     const getUsersFirstNameFromId = async () => {
       if (!userId) return; // Prevent API call if userId is null or undefined
       try {
-        const response = await axios.get(
-          `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`
-        );
+        const response = await axios.get(`${apiUrl}/users/${userId}`);
         setFullName(response.data.fullName);
       } catch (error) {
         console.error("Error fetching user:", error);
