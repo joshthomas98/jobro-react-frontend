@@ -20,7 +20,7 @@ const Careers = () => {
             <ListGroup.Item>Customer Support Specialist</ListGroup.Item>
             <ListGroup.Item>Marketing Manager</ListGroup.Item>
           </ListGroup>
-          <p>
+          <p className="mt-3">
             To apply, send your resume and cover letter to{" "}
             <a href="mailto:careers@cvtailor.io">careers@cvtailor.io</a>
           </p>

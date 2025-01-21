@@ -31,7 +31,12 @@ const Homepage = () => {
                 CvTailor.io uses advanced AI to tailor your CV for specific job
                 requirements, helping you secure your dream role effortlessly.
               </p>
-              <Button variant="light" size="lg" className="mt-2 mb-4">
+              <Button
+                variant="light"
+                size="lg"
+                className="mt-2 mb-4"
+                href={userId ? `/userprofile/${userId}` : "/signin"}
+              >
                 Get Started for Free
               </Button>
             </Col>
@@ -186,9 +191,15 @@ const Homepage = () => {
           <p className="lead">
             Sign up now and get started with CvTailor.io today!
           </p>
-          <Button variant="light" size="lg">
-            Join for Free
-          </Button>
+          {userId ? (
+            <Button variant="light" size="lg" href={`/userprofile/${userId}`}>
+              Get Started
+            </Button>
+          ) : (
+            <Button variant="light" size="lg" href="/signin">
+              Join for Free
+            </Button>
+          )}
         </Container>
       </section>
     </div>

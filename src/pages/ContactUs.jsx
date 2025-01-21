@@ -3,7 +3,7 @@ import { Container, Card, ListGroup } from "react-bootstrap";
 
 const ContactUs = () => {
   return (
-    <Container>
+    <Container className="my-4">
       <h1>Contact Us</h1>
       <Card>
         <Card.Body>
@@ -22,7 +22,7 @@ const ContactUs = () => {
               Address: [Insert physical address, if applicable]
             </ListGroup.Item>
           </ListGroup>
-          <p>Follow us on social media for updates:</p>
+          <p className="mt-3">Follow us on social media for updates:</p>
           <ListGroup>
             <ListGroup.Item>Twitter: [Link]</ListGroup.Item>
             <ListGroup.Item>LinkedIn: [Link]</ListGroup.Item>

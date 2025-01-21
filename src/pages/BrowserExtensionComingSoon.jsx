@@ -1,21 +1,37 @@
 import React, { useState } from "react";
+import axios from "axios";
 import { Container, Button, Form } from "react-bootstrap";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const BrowserExtensionComingSoon = () => {
+  const apiUrl = import.meta.env.VITE_API_URL;
+
+  const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
   };
 
-  const handleSubmit = (e) => {
+  const handleNewsletterSignupSubmit = async (e) => {
+    setIsLoading(true);
     e.preventDefault();
-    // Add functionality to submit email (e.g., to backend or newsletter service)
-    console.log("Email submitted:", email);
-    setEmail(""); // Clear the input after submission
+    try {
+      const response = await axios.post(`${apiUrl}newslettersignups/`, {
+        email,
+      });
+      console.log("Newsletter signup successful:", response.data);
+    } catch (error) {
+      console.error("Newsletter signup error:", error.message);
+    } finally {
+      setEmail(""); // Clear the input after submission
+      setIsLoading(false);
+    }
   };
 
-  return (
+  return isLoading ? (
+    <LoadingSpinner message="Signing you in..." />
+  ) : (
     <div
       style={{
         backgroundColor: "#006666",
@@ -73,7 +89,7 @@ const BrowserExtensionComingSoon = () => {
             for our free monthly newsletter below!
           </h3>
 
-          <Form onSubmit={handleSubmit}>
+          <Form onSubmit={handleNewsletterSignupSubmit}>
             <Form.Group controlId="email" style={{ marginBottom: "1rem" }}>
               <Form.Control
                 type="email"
@@ -81,6 +97,7 @@ const BrowserExtensionComingSoon = () => {
                 value={email}
                 onChange={handleEmailChange}
                 required
+                className="mt-4"
                 style={{
                   padding: "0.75rem",
                   fontSize: "1rem",
@@ -92,6 +109,7 @@ const BrowserExtensionComingSoon = () => {
             </Form.Group>
             <Button
               type="submit"
+              className="mt-3"
               style={{
                 padding: "0.75rem 1.5rem",
                 backgroundColor: "#00b3b3",
@@ -109,50 +127,7 @@ const BrowserExtensionComingSoon = () => {
             </Button>
           </Form>
         </div>
-
-        <div style={{ marginTop: "2rem" }}>
-          <Button
-            className="mt-1"
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor: "#00b3b3",
-              border: "none",
-              borderRadius: "5px",
-              fontSize: "1rem",
-              fontWeight: "500",
-              cursor: "pointer",
-              transition: "background-color 0.3s ease",
-            }}
-            href="/"
-            onMouseEnter={(e) => (e.target.style.backgroundColor = "#009999")}
-            onMouseLeave={(e) => (e.target.style.backgroundColor = "#00b3b3")}
-            onClick={() => (window.location.href = "https://jobro.io")}
-          >
-            Back to Jobro.io
-          </Button>
-        </div>
       </Container>
-
-      <footer
-        style={{ position: "absolute", bottom: "1rem", fontSize: "0.875rem" }}
-      >
-        <p>
-          &copy; 2025 Jobro.io |{" "}
-          <a
-            href="https://jobro.io/privacy-policy"
-            style={{ color: "#00e6e6", textDecoration: "none" }}
-          >
-            Privacy Policy
-          </a>{" "}
-          |{" "}
-          <a
-            href="https://jobro.io/contact"
-            style={{ color: "#00e6e6", textDecoration: "none" }}
-          >
-            Contact Us
-          </a>
-        </p>
-      </footer>
     </div>
   );
 };
