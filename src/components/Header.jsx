@@ -19,7 +19,7 @@ const Header = () => {
     const getUsersFirstNameFromId = async () => {
       if (!userId) return; // Prevent API call if userId is null or undefined
       try {
-        const response = await axios.get(`${apiUrl}/users/${userId}`);
+        const response = await axios.get(`${apiUrl}users/${userId}`);
         setFullName(response.data.fullName);
       } catch (error) {
         console.error("Error fetching user:", error);
