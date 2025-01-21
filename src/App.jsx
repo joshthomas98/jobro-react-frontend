@@ -17,6 +17,7 @@ import Blog from "./pages/Blog.jsx";
 import FAQs from "./pages/FAQs.jsx";
 import Careers from "./pages/Careers.jsx";
 import ContactUs from "./pages/ContactUs.jsx";
+import NewsletterThankYou from "./pages/NewsletterThankYou.jsx";
 
 export const LoginContext = createContext();
 
@@ -72,6 +73,8 @@ const App = () => {
           <Route path="/careers" element={<Careers />} />
 
           <Route path="/contact" element={<ContactUs />} />
+
+          <Route path="/newsletterthankyou" element={<NewsletterThankYou />} />
         </Routes>
         <Footer />
       </Router>
