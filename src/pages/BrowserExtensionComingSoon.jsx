@@ -1,9 +1,11 @@
-import React, { useState } from "react";
+import React, { use, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Container, Button, Form } from "react-bootstrap";
 import LoadingSpinner from "../components/LoadingSpinner";
 
 const BrowserExtensionComingSoon = () => {
+  const navigate = useNavigate();
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +23,7 @@ const BrowserExtensionComingSoon = () => {
         email,
       });
       console.log("Newsletter signup successful:", response.data);
+      navigate("/newsletterthankyou");
     } catch (error) {
       console.error("Newsletter signup error:", error.message);
     } finally {
@@ -30,7 +33,7 @@ const BrowserExtensionComingSoon = () => {
   };
 
   return isLoading ? (
-    <LoadingSpinner message="Signing you in..." />
+    <LoadingSpinner message="Signing you up for our newsletter..." />
   ) : (
     <div
       style={{
