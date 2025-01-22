@@ -49,7 +49,7 @@ const UserProfile = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`,
+        `${apiUrl}/joblistings/create-new-optimised-cv/${userId}`,
         { jobListingText },
         { responseType: "blob" } // Ensure the response is handled as a binary large object (PDF)
       );
@@ -84,15 +84,11 @@ const UserProfile = () => {
     formData.append("userId", userId);
 
     try {
-      const response = await axios.post(
-        `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/uploadCV`,
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(`${apiUrl}/users/uploadCV`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200) {
         alert("CV uploaded successfully!");
@@ -116,7 +112,7 @@ const UserProfile = () => {
         uploadedCV: uploadedCV,
       };
       const response = await axios.put(
-        `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`,
+        `${apiUrl}/users/${userId}`,
         updatedUserData
       );
       setUserData(response.data);
