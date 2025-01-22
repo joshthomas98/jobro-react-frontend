@@ -25,6 +25,7 @@ const UserProfile = () => {
   const [generatedCVs, setGeneratedCVs] = useState([]);
   const [uploadedCV, setUploadedCV] = useState(null);
   const [optimisedCVText, setOptimisedCVText] = useState("");
+  const [pdfUrl, setPdfUrl] = useState(null); // To store the generated PDF URL
 
   const userId = localStorage.getItem("userId");
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
@@ -49,11 +50,16 @@ const UserProfile = () => {
     try {
       const response = await axios.post(
         `${SERVER_BASE_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`,
-        { jobListingText }
+        { jobListingText },
+        { responseType: "blob" } // Ensure the response is handled as a binary large object (PDF)
       );
-      console.log("Optimised CV back from AI:", response.data);
+
+      // Create a download URL from the blob
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+      setPdfUrl(pdfUrl); // Set the URL for the PDF download link
     } catch (error) {
-      console.log(error);
+      console.error("Error generating CV:", error);
     } finally {
       setIsLoading(false);
     }
@@ -62,8 +68,6 @@ const UserProfile = () => {
   const handleUploadCV = async (e) => {
     const file = e.target.files[0];
     setUploadedCV(file);
-
-    console.log(file.name);
 
     if (!file) {
       alert("No file selected!");
@@ -92,7 +96,6 @@ const UserProfile = () => {
 
       if (response.status === 200) {
         alert("CV uploaded successfully!");
-        // Update user data after successful upload
         setUserData(response.data); // Assuming response.data includes the updated user info
       } else {
         alert("Error uploading CV.");
@@ -123,10 +126,21 @@ const UserProfile = () => {
     }
   };
 
+  // Function to trigger the download of the PDF
+  const handleDownloadCV = () => {
+    if (pdfUrl) {
+      const link = document.createElement("a");
+      link.href = pdfUrl; // Use the generated PDF URL
+      link.download = "Generated_CV.pdf"; // Name of the file when downloading
+      link.click(); // Trigger the download
+    } else {
+      alert("No CV available to download.");
+    }
+  };
+
   return (
     <Container>
       {isLoading && <LoadingSpinner />}
-      {/* Profile Header */}
       <Row className="my-5">
         <Col md={4}>
           <Card className="shadow-lg rounded-lg border-0">
@@ -164,7 +178,6 @@ const UserProfile = () => {
           </Card>
         </Col>
 
-        {/* User Content Section */}
         <Col md={8}>
           <Card className="shadow-lg rounded-lg border-0 mb-4">
             <Card.Body>
@@ -199,7 +212,6 @@ const UserProfile = () => {
             </Card.Body>
           </Card>
 
-          {/* Upload CV Section */}
           <Card className="shadow-lg rounded-lg border-0 mb-4">
             <Card.Body>
               <h4 className="text-primary" style={{ fontWeight: 600 }}>
@@ -209,7 +221,6 @@ const UserProfile = () => {
                 controlId="formBaseCV"
                 style={{ display: "flex", alignItems: "center" }}
               >
-                {/* Conditionally render the file input or "Choose new file" button */}
                 {!userData.baseCV || !userData.baseCV.fileUrl ? (
                   <Form.Control
                     type="file"
@@ -222,7 +233,6 @@ const UserProfile = () => {
                   />
                 ) : (
                   <>
-                    {/* "Choose new file" button */}
                     <Button
                       variant="link"
                       onClick={() =>
@@ -232,7 +242,6 @@ const UserProfile = () => {
                     >
                       <small>Choose new file</small>
                     </Button>
-                    {/* Hidden file input for file selection */}
                     <Form.Control
                       id="cvUpload"
                       type="file"
@@ -242,7 +251,6 @@ const UserProfile = () => {
                     />
                   </>
                 )}
-                {/* Display the uploaded file name inline */}
                 {userData.baseCV && userData.baseCV.fileUrl && (
                   <small className="ml-2">
                     <strong className="mx-2">
@@ -254,7 +262,6 @@ const UserProfile = () => {
             </Card.Body>
           </Card>
 
-          {/* Generated CVs Carousel */}
           <Card className="shadow-lg rounded-lg border-0 mb-4">
             <Card.Body>
               <h4 className="text-primary" style={{ fontWeight: 600 }}>
@@ -276,102 +283,38 @@ const UserProfile = () => {
                         <h5>{cv.name}</h5>
                         <Button
                           variant="secondary"
-                          href={cv.downloadLink} // Assuming this link is valid
-                          target="_blank"
+                          href={cv.downloadLink}
+                          download
                         >
-                          View/Download CV
+                          Download CV
                         </Button>
                       </Carousel.Caption>
                     </Carousel.Item>
                   ))}
                 </Carousel>
               ) : (
-                <p>No generated CVs yet.</p>
+                <p>No generated CVs available.</p>
               )}
             </Card.Body>
           </Card>
 
-          <p className="text-dark">{optimisedCVText}</p>
-
-          {/* Download New CV */}
-          <Button
-            variant="primary"
-            onClick={() => alert("Downloading your CV...")}
-            className="rounded-pill"
-            style={{
-              backgroundColor: themeColor,
-              border: "none",
-              padding: "10px 30px",
-            }}
-          >
-            Download My New CV
-          </Button>
+          {/* PDF download button */}
+          {pdfUrl && (
+            <Button
+              variant="primary"
+              onClick={handleDownloadCV}
+              className="rounded-pill"
+              style={{
+                backgroundColor: themeColor,
+                border: "none",
+                padding: "10px 30px",
+              }}
+            >
+              Download Your Generated CV
+            </Button>
+          )}
         </Col>
       </Row>
-
-      {/* Edit Profile Section (Appears when editing) */}
-      {isEditing && (
-        <Row>
-          <Col md={12}>
-            <Card className="shadow-lg rounded-lg border-0 mb-5">
-              <Card.Body>
-                <h4 className="text-primary" style={{ fontWeight: 600 }}>
-                  Edit Profile
-                </h4>
-                <Form>
-                  <Form.Group controlId="formFullName">
-                    <Form.Label>Full Name</Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter your full name"
-                      value={userData.fullName || ""}
-                      onChange={(e) =>
-                        setUserData({ ...userData, fullName: e.target.value })
-                      }
-                    />
-                  </Form.Group>
-                  <Form.Group controlId="formEmail">
-                    <Form.Label>Email Address</Form.Label>
-                    <Form.Control
-                      type="email"
-                      placeholder="Enter your email"
-                      value={userData.email || ""}
-                      onChange={(e) =>
-                        setUserData({ ...userData, email: e.target.value })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter your password"
-                      value={userData.password || ""}
-                      onChange={(e) =>
-                        setUserData({ ...userData, password: e.target.value })
-                      }
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    onClick={handleSaveProfile}
-                    className="rounded-pill mt-3"
-                    style={{
-                      backgroundColor: themeColor,
-                      border: "none",
-                      padding: "10px 30px",
-                    }}
-                  >
-                    Save Changes
-                  </Button>
-                </Form>
-              </Card.Body>
-            </Card>
-          </Col>
-        </Row>
-      )}
     </Container>
   );
 };
