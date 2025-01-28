@@ -6,7 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 const Register = () => {
   const SERVER_BASE_URL = "http://localhost:8000/";
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const PRODUCTION_URL_WITHOUT_TRAILING_SLASH = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -22,11 +22,14 @@ const Register = () => {
     }
     setIsLoading(true);
     try {
-      const response = await axios.post(`${apiUrl}users/new-user-signup`, {
-        fullName,
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/new-user-signup`,
+        {
+          fullName,
+          email,
+          password,
+        }
+      );
       console.log("Registration successful:", response.data);
       navigate("/welcomenewuser");
     } catch (error) {

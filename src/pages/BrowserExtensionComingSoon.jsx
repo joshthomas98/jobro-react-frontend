@@ -6,7 +6,7 @@ import LoadingSpinner from "../components/LoadingSpinner";
 
 const BrowserExtensionComingSoon = () => {
   const navigate = useNavigate();
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const PRODUCTION_URL_WITHOUT_TRAILING_SLASH = import.meta.env.VITE_API_URL;
 
   const [isLoading, setIsLoading] = useState(false);
   const [email, setEmail] = useState("");
@@ -19,9 +19,12 @@ const BrowserExtensionComingSoon = () => {
     setIsLoading(true);
     e.preventDefault();
     try {
-      const response = await axios.post(`${apiUrl}newslettersignups/`, {
-        email,
-      });
+      const response = await axios.post(
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/newslettersignups/`,
+        {
+          email,
+        }
+      );
       console.log("Newsletter signup successful:", response.data);
       navigate("/newsletterthankyou");
     } catch (error) {

@@ -29,13 +29,15 @@ const UserProfile = () => {
 
   const userId = localStorage.getItem("userId");
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const PRODUCTION_URL_WITHOUT_TRAILING_SLASH = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get(`${apiUrl}users/${userId}`);
+        const response = await axios.get(
+          `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}users/${userId}`
+        );
         setUserData(response.data);
       } catch (error) {
         console.error("Error fetching user data:", error);
@@ -46,22 +48,25 @@ const UserProfile = () => {
   }, [userId]);
 
   const handleGenerateOptimisedCV = async () => {
-    setIsLoading(true);
     try {
       const response = await axios.post(
-        `${apiUrl}joblistings/create-new-optimised-cv/${userId}`,
-        { jobListingText },
-        { responseType: "blob" } // Ensure the response is handled as a binary large object (PDF)
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`, // Ensure userId is passed correctly in URL or request body
+        { jobListingText: jobListingText }
       );
-
-      // Create a download URL from the blob
-      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
-      const pdfUrl = URL.createObjectURL(pdfBlob);
-      setPdfUrl(pdfUrl); // Set the URL for the PDF download link
+      // Handle the successful response here
+      console.log("Optimised CV generated:", response.data);
     } catch (error) {
       console.error("Error generating CV:", error);
-    } finally {
-      setIsLoading(false);
+      if (error.response) {
+        // Log the server-side error response
+        console.error("Server Error:", error.response.data);
+      } else if (error.request) {
+        // Log if the request was made but no response was received
+        console.error("No response received from server:", error.request);
+      } else {
+        // Log any other errors
+        console.error("Unexpected error:", error.message);
+      }
     }
   };
 
@@ -84,11 +89,15 @@ const UserProfile = () => {
     formData.append("userId", userId);
 
     try {
-      const response = await axios.post(`${apiUrl}users/uploadCV`, formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const response = await axios.post(
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/uploadCV`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       if (response.status === 200) {
         alert("CV uploaded successfully!");
@@ -112,7 +121,7 @@ const UserProfile = () => {
         uploadedCV: uploadedCV,
       };
       const response = await axios.put(
-        `${apiUrl}users/${userId}`,
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`,
         updatedUserData
       );
       setUserData(response.data);

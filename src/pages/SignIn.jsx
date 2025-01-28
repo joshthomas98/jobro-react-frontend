@@ -9,7 +9,7 @@ const SignIn = () => {
   const { userId, setUserId } = useContext(LoginContext);
 
   const SERVER_BASE_URL = "http://localhost:8000/";
-  const apiUrl = import.meta.env.VITE_API_URL;
+  const PRODUCTION_URL_WITHOUT_TRAILING_SLASH = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   const [isLoading, setIsLoading] = useState(false);
@@ -19,10 +19,13 @@ const SignIn = () => {
   const handleSignIn = async () => {
     setIsLoading(true);
     try {
-      const response = await axios.post(`${apiUrl}users/sign-in`, {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/sign-in`,
+        {
+          email,
+          password,
+        }
+      );
       console.log("Sign-in successful:", response.data);
       setUserId(response.data.id);
       localStorage.setItem("userId", response.data.id);
