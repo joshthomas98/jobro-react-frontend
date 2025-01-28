@@ -26,6 +26,7 @@ const UserProfile = () => {
   const [uploadedCV, setUploadedCV] = useState(null);
   const [optimisedCVText, setOptimisedCVText] = useState("");
   const [pdfUrl, setPdfUrl] = useState(null); // To store the generated PDF URL
+  const [optimisedCVResponse, setOptimisedCVResponse] = useState(null);
 
   const userId = localStorage.getItem("userId");
   const SERVER_BASE_URL_WITHOUT_TRAILING_SLASH = "http://localhost:8000";
@@ -48,6 +49,7 @@ const UserProfile = () => {
   }, [userId]);
 
   const handleGenerateOptimisedCV = async () => {
+    setIsLoading(true);
     try {
       const response = await axios.post(
         `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`, // Ensure userId is passed correctly in URL or request body
@@ -55,6 +57,7 @@ const UserProfile = () => {
       );
       // Handle the successful response here
       console.log("Optimised CV generated:", response.data);
+      setOptimisedCVResponse(response.data);
     } catch (error) {
       console.error("Error generating CV:", error);
       if (error.response) {
@@ -67,6 +70,8 @@ const UserProfile = () => {
         // Log any other errors
         console.error("Unexpected error:", error.message);
       }
+    } finally {
+      setIsLoading(false); // This will always run, no matter what
     }
   };
 
@@ -133,11 +138,11 @@ const UserProfile = () => {
 
   // Function to trigger the download of the PDF
   const handleDownloadCV = () => {
-    if (pdfUrl) {
+    if (optimisedCVResponse) {
       const link = document.createElement("a");
-      link.href = pdfUrl; // Use the generated PDF URL
-      link.download = "Generated_CV.pdf"; // Name of the file when downloading
-      link.click(); // Trigger the download
+      link.href = pdfUrl;
+      link.download = "Generated_CV.pdf";
+      link.click();
     } else {
       alert("No CV available to download.");
     }
@@ -303,20 +308,24 @@ const UserProfile = () => {
             </Card.Body>
           </Card>
 
-          {/* PDF download button */}
-          {pdfUrl && (
-            <Button
-              variant="primary"
-              onClick={handleDownloadCV}
-              className="rounded-pill"
-              style={{
-                backgroundColor: themeColor,
-                border: "none",
-                padding: "10px 30px",
-              }}
-            >
-              Download Your Generated CV
-            </Button>
+          {/* PDF Download Button */}
+          {optimisedCVResponse && (
+            <Card className="shadow-lg rounded-lg border-0 mt-4">
+              <Card.Body className="text-center">
+                <Button
+                  variant="success"
+                  onClick={handleDownloadCV}
+                  className="rounded-pill"
+                  style={{
+                    backgroundColor: "#28a745",
+                    border: "none",
+                    padding: "10px 30px",
+                  }}
+                >
+                  Download My New CV
+                </Button>
+              </Card.Body>
+            </Card>
           )}
         </Col>
       </Row>
