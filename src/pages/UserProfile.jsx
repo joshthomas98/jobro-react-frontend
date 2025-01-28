@@ -36,7 +36,7 @@ const UserProfile = () => {
     const fetchUserData = async () => {
       try {
         const response = await axios.get(
-          `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}users/${userId}`
+          `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`
         );
         setUserData(response.data);
       } catch (error) {
