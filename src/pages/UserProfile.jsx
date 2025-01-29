@@ -52,26 +52,55 @@ const UserProfile = () => {
     setIsLoading(true);
     try {
       const response = await axios.post(
-        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`, // Ensure userId is passed correctly in URL or request body
-        { jobListingText: jobListingText }
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/joblistings/create-new-optimised-cv/${userId}`,
+        { jobListingText },
+        { responseType: "blob" } // Ensure correct binary handling
       );
-      // Handle the successful response here
-      console.log("Optimised CV generated:", response.data);
-      setOptimisedCVResponse(response.data);
+
+      const pdfBlob = new Blob([response.data], { type: "application/pdf" });
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      console.log("Generated PDF Blob URL:", pdfUrl);
+
+      setPdfUrl(pdfUrl);
+      setOptimisedCVResponse({ pdfUrl });
     } catch (error) {
       console.error("Error generating CV:", error);
-      if (error.response) {
-        // Log the server-side error response
-        console.error("Server Error:", error.response.data);
-      } else if (error.request) {
-        // Log if the request was made but no response was received
-        console.error("No response received from server:", error.request);
-      } else {
-        // Log any other errors
-        console.error("Unexpected error:", error.message);
-      }
     } finally {
-      setIsLoading(false); // This will always run, no matter what
+      setIsLoading(false);
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const updatedUserData = {
+        fullName: userData.fullName,
+        email: userData.email,
+        password: userData.password,
+        profilePic: userData.profilePic,
+        uploadedCV: uploadedCV,
+      };
+      const response = await axios.put(
+        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`,
+        updatedUserData
+      );
+      setUserData(response.data);
+      setIsEditing(false);
+    } catch (error) {
+      console.error("Error updating user data:", error);
+    }
+  };
+
+  const handleDownloadCV = () => {
+    if (pdfUrl) {
+      const link = document.createElement("a");
+      link.href = pdfUrl;
+      link.download = "Generated_CV.pdf";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert("No CV available to download.");
     }
   };
 
@@ -98,53 +127,19 @@ const UserProfile = () => {
         `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/uploadCV`,
         formData,
         {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
+          headers: { "Content-Type": "multipart/form-data" },
         }
       );
 
       if (response.status === 200) {
         alert("CV uploaded successfully!");
-        setUserData(response.data); // Assuming response.data includes the updated user info
+        setUserData(response.data);
       } else {
         alert("Error uploading CV.");
       }
     } catch (error) {
       console.error("Error uploading CV:", error);
       alert("Error uploading CV.");
-    }
-  };
-
-  const handleSaveProfile = async () => {
-    try {
-      const updatedUserData = {
-        fullName: userData.fullName,
-        email: userData.email,
-        password: userData.password,
-        profilePic: userData.profilePic,
-        uploadedCV: uploadedCV,
-      };
-      const response = await axios.put(
-        `${PRODUCTION_URL_WITHOUT_TRAILING_SLASH}/users/${userId}`,
-        updatedUserData
-      );
-      setUserData(response.data);
-      setIsEditing(false);
-    } catch (error) {
-      console.error("Error updating user data:", error);
-    }
-  };
-
-  // Function to trigger the download of the PDF
-  const handleDownloadCV = () => {
-    if (optimisedCVResponse) {
-      const link = document.createElement("a");
-      link.href = pdfUrl;
-      link.download = "Generated_CV.pdf";
-      link.click();
-    } else {
-      alert("No CV available to download.");
     }
   };
 
