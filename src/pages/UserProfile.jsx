@@ -145,7 +145,7 @@ const UserProfile = () => {
 
   return (
     <Container>
-      {isLoading && <LoadingSpinner />}
+      {isLoading && <LoadingSpinner className="pt-3" />}
       <Row className="my-5">
         <Col md={4}>
           <Card className="shadow-lg rounded-lg border-0">
